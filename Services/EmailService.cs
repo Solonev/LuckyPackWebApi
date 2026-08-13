@@ -59,6 +59,17 @@ public class EmailService(
             if (logger.IsEnabled(LogLevel.Information))
                 logger.LogInformation("Создание Smtp-клиента...");
             
+            var addresses = await Dns.GetHostAddressesAsync(_options.SmtpServer, timeoutCts.Token);
+            
+            if (logger.IsEnabled(LogLevel.Information))
+                foreach (var address in addresses)
+                {
+                    logger.LogInformation(
+                        "SMTP address: {Address}, family: {Family}",
+                        address,
+                        address.AddressFamily);
+                }
+            
             //Создание клиента
             using var client = new SmtpClient();
             
@@ -105,7 +116,11 @@ public class EmailService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error sending email: {Subject} \n\n {Exception}", subject, ex);
+            logger.LogError(
+                ex,
+                "Error sending email: {Subject} \n\n {Exception}",
+                subject,
+                ex);
             return false;
         }
     }
