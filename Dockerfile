@@ -9,6 +9,12 @@ RUN apt-get update \
         nano \
     && rm -rf /var/lib/apt/lists/*
 
+# Предпочитать IPv6 перед IPv4
+RUN printf '%s\n' \
+    'precedence ::/0           100' \
+    'precedence ::ffff:0:0/96  10' \
+    >> /etc/gai.conf
+
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
