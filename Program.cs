@@ -68,7 +68,7 @@ public static class Program
         
         
         var token =
-            builder.Configuration["Telegram:BotToken"]
+            builder.Configuration["TelegramOptions:BotToken"]
             ?? throw new InvalidOperationException("Telegram bot token is not configured.");
         
         services.AddSingleton<ITelegramBotClient>(_ =>

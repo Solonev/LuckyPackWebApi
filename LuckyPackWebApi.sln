@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuckyPuckWebApi", "LuckyPuckWebApi.csproj", "{9A0B6077-3F26-4DD6-B935-6FFC2BDF5108}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuckyPackWebApi", "LuckyPackWebApi.csproj", "{9A0B6077-3F26-4DD6-B935-6FFC2BDF5108}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

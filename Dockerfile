@@ -7,17 +7,17 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["LuckyPuckWebApi.csproj", "./"]
-RUN dotnet restore "LuckyPuckWebApi.csproj"
+COPY ["LuckyPackWebApi.csproj", "./"]
+RUN dotnet restore "LuckyPackWebApi.csproj"
 COPY . .
 WORKDIR "/src/"
-RUN dotnet build "./LuckyPuckWebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./LuckyPackWebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./LuckyPuckWebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./LuckyPackWebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "LuckyPuckWebApi.dll"]
+ENTRYPOINT ["dotnet", "LuckyPackWebApi.dll"]
