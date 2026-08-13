@@ -11,7 +11,7 @@
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       EmailOptions__SmtpServer: ${SMTP_SERVER}
-      EmailOptions__SmtpPort: 587
+      EmailOptions__SmtpPort: ${SMTP_PORT}
       EmailOptions__Email: ${EMAIL}
       EmailOptions__Password: ${EMAIL_PASSWORD}
       EmailOptions__EnableSsl: true
