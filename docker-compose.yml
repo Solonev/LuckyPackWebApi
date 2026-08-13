@@ -14,6 +14,11 @@
     extra_hosts:
       - "smtp.yandex.ru:77.88.21.158"
       - "smtp.yandex.ru:77.88.21.3"  # Запасной IP
+        
+    privileged: true
+    sysctls:
+      - net.ipv4.conf.all.forwarding=1
+      - net.ipv4.ip_forward=1
 
     environment:
       ASPNETCORE_ENVIRONMENT: Production
