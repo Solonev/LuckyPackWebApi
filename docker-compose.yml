@@ -1,0 +1,20 @@
+﻿services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: lucky-pack-api
+
+    restart: unless-stopped
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      EmailOptions__SmtpServer: ${SMTP_SERVER}
+      EmailOptions__SmtpPort: 587
+      EmailOptions__Email: ${EMAIL}
+      EmailOptions__Password: ${EMAIL_PASSWORD}
+      EmailOptions__EnableSsl: true
+
+    ports:
+      - "127.0.0.1:8080:8080"
