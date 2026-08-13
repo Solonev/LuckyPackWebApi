@@ -69,7 +69,8 @@ public class EmailService(
             
             //Коннект
             await client.ConnectAsync(
-                _options.SmtpServer,
+                //_options.SmtpServer,
+                "2a02:6b8::19d",
                 _options.SmtpPort,
                 SecureSocketOptions.SslOnConnect,
                 timeoutCts.Token
