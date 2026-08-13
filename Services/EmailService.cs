@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using LuckyPackWebApi.Models;
 using LuckyPackWebApi.Options;
@@ -56,9 +57,6 @@ public class EmailService(
         
         try
         {
-            if (logger.IsEnabled(LogLevel.Information))
-                logger.LogInformation("Создание Smtp-клиента...");
-            
             var addresses = await Dns.GetHostAddressesAsync(_options.SmtpServer, timeoutCts.Token);
             
             if (logger.IsEnabled(LogLevel.Information))
@@ -70,21 +68,48 @@ public class EmailService(
                         address.AddressFamily);
                 }
             
+            var ipv6 = addresses.FirstOrDefault(a =>
+                a.AddressFamily == AddressFamily.InterNetworkV6);
+            
+            if (ipv6 == null)
+                throw new Exception("IPv6 address for SMTP server not found");
+            
+            if (logger.IsEnabled(LogLevel.Information))
+                logger.LogInformation("Создание Smtp-клиента...");
+            
             //Создание клиента
             using var client = new SmtpClient();
+            
+            var socket = new Socket(
+                AddressFamily.InterNetworkV6,
+                SocketType.Stream,
+                ProtocolType.Tcp);
             
             if (logger.IsEnabled(LogLevel.Information))
                 logger.LogInformation(
                     $"Smtp-клиент создан. Попытка соединения: {_options.SmtpServer}:{_options.SmtpPort} enableSSL:{_options.EnableSsl}"
                 );
             
-            //Коннект
+            await socket.ConnectAsync(
+                new IPEndPoint(ipv6, _options.SmtpPort),
+                timeoutCts.Token);
+            
+            await using var stream = new NetworkStream(socket, ownsSocket: true);
+            
             await client.ConnectAsync(
+                stream,
                 _options.SmtpServer,
                 _options.SmtpPort,
                 SecureSocketOptions.SslOnConnect,
-                timeoutCts.Token
-            );
+                timeoutCts.Token);
+            
+            // //Коннект
+            // await client.ConnectAsync(
+            //     _options.SmtpServer,
+            //     _options.SmtpPort,
+            //     SecureSocketOptions.SslOnConnect,
+            //     timeoutCts.Token
+            // );
             
             if (logger.IsEnabled(LogLevel.Information))
                 logger.LogInformation($"Успешное соединение. Попытка аутентификации ({_options.Email} : {_options.Password[..4]}...) ...");
