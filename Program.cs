@@ -54,6 +54,26 @@ public static class Program
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
+            
+            options.AddPolicy(
+                "Production",
+                policy =>
+                {
+                    policy
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            
+            options.AddPolicy(
+                "Release",
+                policy =>
+                {
+                    policy
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
         });
         
         //TODO: Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
