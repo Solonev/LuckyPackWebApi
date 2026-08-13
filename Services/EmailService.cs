@@ -49,6 +49,10 @@ public class EmailService(
         CancellationToken ct = default
     )
     {
+        using var timeoutCts = new CancellationTokenSource(
+            TimeSpan.FromSeconds(300)
+        );
+        
         try
         {
             if (logger.IsEnabled(LogLevel.Information))
@@ -67,7 +71,7 @@ public class EmailService(
                 _options.SmtpServer,
                 _options.SmtpPort,
                 _options.EnableSsl,
-                ct
+                timeoutCts.Token
             );
             
             if (logger.IsEnabled(LogLevel.Information))
@@ -78,7 +82,7 @@ public class EmailService(
             await client.AuthenticateAsync(
                 _options.Email,
                 _options.Password,
-                ct
+                timeoutCts.Token
             );
             
             if (logger.IsEnabled(LogLevel.Information))
@@ -88,19 +92,19 @@ public class EmailService(
             var mail = CreateMail(subject, body);
             
             //Отправка письма
-            await client.SendAsync(mail, ct);
+            await client.SendAsync(mail, timeoutCts.Token);
             
             if (logger.IsEnabled(LogLevel.Information))
                 logger.LogInformation("Сообщение отправлено.");
             
             //Отключение
-            await client.DisconnectAsync(true, ct);
+            await client.DisconnectAsync(true, timeoutCts.Token);
             
             return true;
         }
         catch (Exception ex)
         {
-            logger?.LogError(ex, "Error sending email: {Subject}", subject);
+            logger.LogError(ex, "Error sending email: {Subject} \n\n {Exception}", subject, ex);
             return false;
         }
     }
