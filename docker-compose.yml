@@ -3,10 +3,17 @@
     build:
       context: .
       dockerfile: Dockerfile
+      
+    networks:
+      - app-network
 
     container_name: lucky-pack-api
 
     restart: unless-stopped
+      
+    extra_hosts:
+      - "smtp.yandex.ru:77.88.21.158"
+      - "smtp.yandex.ru:77.88.21.3"  # Запасной IP
 
     environment:
       ASPNETCORE_ENVIRONMENT: Production
@@ -20,3 +27,11 @@
 
     ports:
       - "127.0.0.1:8080:8080"
+        
+networks:
+  app-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
