@@ -6,6 +6,7 @@ RUN apt-get update \
         iproute2 \
         iputils-ping \
         netcat-openbsd \
+        nano \
     && rm -rf /var/lib/apt/lists/*
 
 USER $APP_UID
