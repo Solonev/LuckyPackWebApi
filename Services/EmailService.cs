@@ -10,7 +10,7 @@ namespace LuckyPackWebApi.Services;
 
 public class EmailService(
     IOptions<EmailOptions> settings,
-    ILogger<EmailService>? logger
+    ILogger<EmailService> logger
 )
     : IEmailService
 {
@@ -37,7 +37,7 @@ public class EmailService(
         }
         catch (Exception ex)
         {
-            logger?.LogError(ex, "Error sending order email");
+            logger.LogError(ex, "Error sending order email");
             return false;
         }
     }
@@ -51,8 +51,14 @@ public class EmailService(
     {
         try
         {
+            if (logger.IsEnabled(LogLevel.Information))
+                logger.LogInformation("Создание Smtp-клиента...");
+            
             //Создание клиента
             using var client = new SmtpClient();
+            
+            if (logger.IsEnabled(LogLevel.Information))
+                logger.LogInformation("Smtp-клиент создан. Попытка соединения...");
             
             //Коннект
             await client.ConnectAsync(
@@ -62,6 +68,9 @@ public class EmailService(
                 ct
             );
             
+            if (logger.IsEnabled(LogLevel.Information))
+                logger.LogInformation("Успешное соединение. Попытка аутентификации...");
+            
             //Аутентификация
             client.AuthenticationMechanisms.Remove("XOAUTH2");
             await client.AuthenticateAsync(
@@ -70,11 +79,17 @@ public class EmailService(
                 ct
             );
             
+            if (logger.IsEnabled(LogLevel.Information))
+                logger.LogInformation("Успешная аутентификация. Создание и отправка сообщения...");
+            
             //Создание письма
             var mail = CreateMail(subject, body);
             
             //Отправка письма
             await client.SendAsync(mail, ct);
+            
+            if (logger.IsEnabled(LogLevel.Information))
+                logger.LogInformation("Сообщение отправлено.");
             
             //Отключение
             await client.DisconnectAsync(true, ct);
