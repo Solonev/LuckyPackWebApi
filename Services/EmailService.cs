@@ -58,7 +58,9 @@ public class EmailService(
             using var client = new SmtpClient();
             
             if (logger.IsEnabled(LogLevel.Information))
-                logger.LogInformation("Smtp-клиент создан. Попытка соединения...");
+                logger.LogInformation(
+                    $"Smtp-клиент создан. Попытка соединения: {_options.SmtpServer}:{_options.SmtpPort} enableSSL:{_options.EnableSsl}"
+                );
             
             //Коннект
             await client.ConnectAsync(
@@ -69,7 +71,7 @@ public class EmailService(
             );
             
             if (logger.IsEnabled(LogLevel.Information))
-                logger.LogInformation("Успешное соединение. Попытка аутентификации...");
+                logger.LogInformation($"Успешное соединение. Попытка аутентификации ({_options.Email} : {_options.Password[..4]}...) ...");
             
             //Аутентификация
             client.AuthenticationMechanisms.Remove("XOAUTH2");
