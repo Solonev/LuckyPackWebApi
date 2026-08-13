@@ -203,10 +203,10 @@ public class EmailService(
                         {item.Quantity}
                     </td>
                     <td style='padding: 10px; border-bottom: 1px solid #eee; text-align: right;'>
-                        {item.Price.ToString("N2", Ru)} ₽
+                        {item.Price.ToString("N2", Ru)}
                     </td>
                     <td style='padding: 10px; border-bottom: 1px solid #eee; text-align: right;'>
-                        <b>{item.Total.ToString("N2", Ru)} ₽</b>
+                        <b>{item.Total.ToString("N2", Ru)}</b>
                     </td>
                 </tr>
             ");
@@ -234,11 +234,11 @@ public class EmailService(
                 </div>
                 
                 <div class='order-info'>
-                    <h3>👤 Информация о клиенте</h3>
+                    <h3>👤 Информация о клиенте:</h3>
                     <p><b>Имя:</b> {HtmlEncode(user.FirstName ?? "Неизвестно")}</p>
                     <p><b>Фамилия:</b> {HtmlEncode(user.LastName ?? "")}</p>
-                    <p><b>Username:</b> @{HtmlEncode(user.Username + $"(https://t.me/{user.Username})")}</p>
-                    <p><b>ID:</b> {user.Id}</p>
+                    <p><b>Username:</b> @{HtmlEncode(user.Username + $" (https://t.me/{user.Username})")}</p>
+                    <p><b>ID в Tg:</b> {user.Id}</p>
                 </div>
                 
                 <h3>🛒 Состав заказа</h3>
@@ -248,8 +248,8 @@ public class EmailService(
                             <th style='padding: 10px;'>Товар</th>
                             <th style='padding: 10px;'>Артикул</th>
                             <th style='padding: 10px;'>Кол-во</th>
-                            <th style='padding: 10px;'>Цена</th>
-                            <th style='padding: 10px;'>Сумма</th>
+                            <th style='padding: 10px;'>Цена (₽)</th>
+                            <th style='padding: 10px;'>Сумма (₽)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -272,6 +272,8 @@ public class EmailService(
         </html>
         ";
     }
+    
+    //TODO: сортировать бы корзину по категориям!
     
     private static string HtmlEncode(string text)
     {
