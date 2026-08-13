@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using LuckyPackWebApi.Models;
@@ -17,6 +18,7 @@ public class EmailService(
     : IEmailService
 {
     private readonly EmailOptions _options = settings.Value;
+    private static readonly CultureInfo Ru = CultureInfo.GetCultureInfo("ru-RU");
     
     public async Task<bool> SendOrderEmailAsync(
         Order order,
@@ -201,10 +203,10 @@ public class EmailService(
                         {item.Quantity}
                     </td>
                     <td style='padding: 10px; border-bottom: 1px solid #eee; text-align: right;'>
-                        {item.Price:N2} ₽
+                        {item.Price.ToString("N2", Ru)} ₽
                     </td>
                     <td style='padding: 10px; border-bottom: 1px solid #eee; text-align: right;'>
-                        <b>{item.Total:N2} ₽</b>
+                        <b>{item.Total.ToString("N2", Ru)} ₽</b>
                     </td>
                 </tr>
             ");
@@ -256,10 +258,10 @@ public class EmailService(
                 </table>
                 
                 <div class='total'>
-                    Итого: {order.Total:N2} ₽
+                    Итого: {order.Total.ToString("N2", Ru)} ₽
                 </div>
                 <div style='text-align: right; color: #666;'>
-                    Всего позиций: {order.TotalItems:N0}
+                    Всего позиций: {order.TotalItems.ToString("N0", Ru)}
                 </div>
                 
                 <div class='footer'>
