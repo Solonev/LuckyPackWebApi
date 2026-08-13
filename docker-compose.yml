@@ -8,16 +8,15 @@
 
     restart: unless-stopped
 
-    network_mode: host
-
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      
       EmailOptions__SmtpServer: ${SMTP_SERVER}
       EmailOptions__SmtpPort: ${SMTP_PORT}
       EmailOptions__Email: ${EMAIL}
       EmailOptions__Password: ${EMAIL_PASSWORD}
       EmailOptions__EnableSsl: true
-      
       TelegramOptions__BotToken: ${BOT_TOKEN}
       TelegramOptions__WebAppUrl: ${BOT_WEB_APP_URL}
+
+    ports:
+      - "127.0.0.1:8080:8080"
