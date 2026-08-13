@@ -3,6 +3,7 @@ using System.Text;
 using LuckyPackWebApi.Models;
 using LuckyPackWebApi.Options;
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -70,7 +71,7 @@ public class EmailService(
             await client.ConnectAsync(
                 _options.SmtpServer,
                 _options.SmtpPort,
-                _options.EnableSsl,
+                SecureSocketOptions.SslOnConnect,
                 timeoutCts.Token
             );
             
